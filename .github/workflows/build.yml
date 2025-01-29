@@ -15,6 +15,16 @@ jobs:
     steps:
     - uses: actions/checkout@v4
 
+    - uses: actions/cache@v4
+      with:
+        path: |
+          ~/.cargo/bin/
+          ~/.cargo/registry/index/
+          ~/.cargo/registry/cache/
+          ~/.cargo/git/db/
+          target/
+        key: ${{ runner.os }}-cargo-${{ hashFiles('**/Cargo.lock') }}
+
     - name: Build
       run: cargo build --target x86_64-unknown-linux-gnu --release
     
@@ -22,7 +32,7 @@ jobs:
       uses: actions/upload-artifact@v4.6.0
       with:
         name: image-optimizer
-        path: target/x86_64-unknown-linux-gnu/release
+        path: target/x86_64-unknown-linux-gnu/release/image-optimizer
         if-no-files-found: error
         retention-days: 0
         compression-level: 6
